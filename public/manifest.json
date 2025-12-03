@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "ChanryTabStash",
+  "version": "1.0",
+  "description": "A Cyberpunk styled tab manager to stash and restore tab groups with AI categorization.",
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "ChanryTabStash"
+  },
+  "permissions": [
+    "tabs",
+    "tabGroups",
+    "storage",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ]
+}

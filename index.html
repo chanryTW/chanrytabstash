@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ChanryTabStash</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Share+Tech+Mono&family=Noto+Sans+TC:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap"
+    rel="stylesheet">
+  <style>
+    /* Cyberpunk Global Styles */
+    :root {
+      --color-bg: #030303;
+      --color-primary: #00f0ff;
+      /* Cyan */
+      --color-secondary: #ff003c;
+      /* Red/Pink */
+      --color-grid: rgba(0, 240, 255, 0.05);
+    }
+
+    body {
+      background-color: var(--color-bg);
+      color: #e0e0e0;
+      /* Prioritize Tech fonts, fall back to Noto Sans CJK for Asian characters */
+      font-family: 'Share Tech Mono', 'Noto Sans TC', 'Noto Sans JP', monospace;
+      width: 600px;
+      min-height: 600px;
+    }
+
+    h1,
+    h2,
+    h3,
+    button {
+      /* Headings use Orbitron for numbers/English, fallback to Noto for CJK */
+      font-family: 'Orbitron', 'Noto Sans TC', 'Noto Sans JP', sans-serif;
+      letter-spacing: 1px;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #000;
+      border-left: 1px solid #111;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #333;
+      border: 1px solid #00f0ff;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #00f0ff;
+    }
+
+    /* Grid Background Effect */
+    .cyber-grid {
+      background-size: 40px 40px;
+      background-image:
+        linear-gradient(to right, var(--color-grid) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--color-grid) 1px, transparent 1px);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* CRT Scanline Effect */
+    .scanlines {
+      position: fixed;
+      top: 0;
+      left: 0;
+      background: linear-gradient(to bottom,
+          rgba(255, 255, 255, 0),
+          rgba(255, 255, 255, 0) 50%,
+          rgba(0, 0, 0, 0.2) 50%,
+          rgba(0, 0, 0, 0.2));
+      background-size: 100% 4px;
+      z-index: 50;
+      pointer-events: none;
+      width: 100vw;
+      height: 100vh;
+      opacity: 0.15;
+    }
+
+    /* Clip Path for "Mecha" look */
+    .clip-corner {
+      clip-path: polygon(0 0,
+          100% 0,
+          100% calc(100% - 10px),
+          calc(100% - 10px) 100%,
+          0 100%);
+    }
+
+    .clip-corner-top {
+      clip-path: polygon(10px 0,
+          100% 0,
+          100% 100%,
+          0 100%,
+          0 10px);
+    }
+  </style>
+  <link rel="stylesheet" href="/index.css">
+</head>
+
+<body>
+  <div class="cyber-grid"></div>
+  <div class="scanlines"></div>
+  <div id="root"></div>
+  <script type="module" src="./index.tsx"></script>
+
+</body>
+
+</html>

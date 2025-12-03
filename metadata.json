@@ -1,0 +1,5 @@
+{
+  "name": "ChanryTabStash",
+  "description": "A Cyberpunk styled tab manager dashboard to save memory by stashing tab groups, featuring AI-powered auto-categorization.",
+  "requestFramePermissions": []
+}

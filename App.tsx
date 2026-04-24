@@ -7,6 +7,9 @@ import TabItem from './components/TabItem';
 import SessionCard from './components/SessionCard';
 import { ArchiveIcon, SparklesIcon, RefreshIcon, LayersIcon, GROUP_COLOR_MAP, SettingsIcon, XIcon } from './constants';
 import { translations } from './locales';
+import pkg from './package.json';
+
+const LOCAL_VERSION = pkg.version;
 
 function App() {
   const [activeTabs, setActiveTabs] = useState<ChromeTab[]>([]);
@@ -17,6 +20,7 @@ function App() {
   const [sessionNameInput, setSessionNameInput] = useState('');
   const [view, setView] = useState<'current' | 'saved'>('current');
   const [lang, setLang] = useState<Language>('zh'); // Default to zh
+  const [updateAvailable, setUpdateAvailable] = useState(false);
   
   // Settings / API Key State
   const [showSettings, setShowSettings] = useState(false);
@@ -51,6 +55,29 @@ function App() {
 
   useEffect(() => {
     refreshData();
+    
+    // Check for updates from GitHub
+    const checkUpdate = async () => {
+      try {
+        const response = await fetch('https://raw.githubusercontent.com/chanryTW/chanrytabstash/main/package.json', { cache: 'no-store' });
+        if (response.ok) {
+          const remotePkg = await response.json();
+          if (remotePkg.version && remotePkg.version !== LOCAL_VERSION) {
+             const localParts = LOCAL_VERSION.split('.').map(Number);
+             const remoteParts = remotePkg.version.split('.').map(Number);
+             let isNewer = false;
+             for (let i = 0; i < 3; i++) {
+               if (remoteParts[i] > localParts[i]) { isNewer = true; break; }
+               if (remoteParts[i] < localParts[i]) { break; }
+             }
+             if (isNewer) setUpdateAvailable(true);
+          }
+        }
+      } catch (e) {
+        console.error('Failed to check updates', e);
+      }
+    };
+    checkUpdate();
   }, []);
 
   const changeLanguage = (l: Language) => {
@@ -110,7 +137,6 @@ function App() {
     setSavedSessions(updatedSessions);
     await chromeService.closeTabs(tabsToSave.map(t => t.id));
     setIsProcessing(false);
-    setView('saved');
     refreshData();
   }
 
@@ -163,7 +189,6 @@ function App() {
     setSavedSessions(updatedSessions);
     await chromeService.closeTabs(tabsToClose);
     setIsProcessing(false);
-    setView('saved');
     refreshData();
   };
 
@@ -252,6 +277,15 @@ function App() {
   return (
     <div className="relative w-full min-h-screen flex flex-col font-sans overflow-hidden bg-[var(--color-bg)]">
       
+      {updateAvailable && (
+        <div className="bg-gradient-to-r from-teal-500 to-emerald-500 text-white text-center py-2.5 px-4 shadow-sm z-50 relative font-bold text-xs flex items-center justify-center gap-2">
+          {t.updateAvailable || "✨ 有新版本可供更新！"} 
+          <a href="https://github.com/chanryTW/chanrytabstash/releases" target="_blank" rel="noreferrer" className="underline hover:text-teal-100 transition-colors bg-black/10 px-2 py-0.5 rounded-full ml-2">
+            {t.downloadUpdate || "前往下載最新版本"}
+          </a>
+        </div>
+      )}
+
       {/* Settings Modal */}
       {showSettings && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm p-4 transition-all">
@@ -297,8 +331,8 @@ function App() {
       <header className="bg-white/80 border-b border-gray-100 p-4 sticky top-0 z-20 backdrop-blur-md shadow-sm">
         <div className="max-w-2xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-pastel-mint text-teal-600 rounded-xl flex items-center justify-center shadow-sm border border-teal-100 group">
-              <ArchiveIcon className="w-6 h-6 group-hover:scale-110 transition-transform" />
+            <div className="w-11 h-11 bg-white rounded-[14px] flex items-center justify-center shadow-sm border-2 border-teal-100 group overflow-hidden">
+              <img src="/icon.png" alt="Logo" className="w-full h-full object-contain p-1 group-hover:scale-110 transition-transform" />
             </div>
             <div>
               <h1 className="text-xl font-extrabold text-gray-800 leading-none">

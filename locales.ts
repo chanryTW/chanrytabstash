@@ -5,7 +5,7 @@ export const translations = {
     appTitle: "CHANRY",
     appTitleSuffix: "TAB",
     appTitleEnd: "STASH",
-    sysVer: "Version 1.0",
+    sysVer: "Version 1.0.0",
     activeView: "Current",
     savedView: "Saved",
     settingsTitle: "Settings",
@@ -43,6 +43,8 @@ export const translations = {
     // Alerts
     errNameRequired: "Please enter a group name.",
     warnDelete: "Are you sure you want to delete this session?",
+    updateAvailable: "✨ A new version is available!",
+    downloadUpdate: "Download update",
 
     // Dynamic
     groupPrefix: "Group",
@@ -53,7 +55,7 @@ export const translations = {
     appTitle: "CHANRY",
     appTitleSuffix: "TAB",
     appTitleEnd: "STASH",
-    sysVer: "版本 1.0",
+    sysVer: "版本 1.0.0",
     activeView: "使用中",
     savedView: "已儲存",
     settingsTitle: "設定",
@@ -91,6 +93,8 @@ export const translations = {
     // Alerts
     errNameRequired: "請為這個群組命名！",
     warnDelete: "確定要刪除這筆紀錄嗎？此動作無法復原。",
+    updateAvailable: "✨ 有新版本釋出了！",
+    downloadUpdate: "前往下載最新版本",
 
     // Dynamic
     groupPrefix: "群組",
@@ -101,7 +105,7 @@ export const translations = {
     appTitle: "CHANRY",
     appTitleSuffix: "TAB",
     appTitleEnd: "STASH",
-    sysVer: "バージョン 1.0",
+    sysVer: "バージョン 1.0.0",
     activeView: "現在",
     savedView: "保存済み",
     settingsTitle: "設定",
@@ -139,6 +143,8 @@ export const translations = {
     // Alerts
     errNameRequired: "グループ名を入力してください。",
     warnDelete: "このセッションを削除してもよろしいですか？",
+    updateAvailable: "✨ 新しいバージョンが利用可能です！",
+    downloadUpdate: "最新版をダウンロード",
 
     // Dynamic
     groupPrefix: "グループ",

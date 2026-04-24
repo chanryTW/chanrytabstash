@@ -80,15 +80,15 @@ export const XIcon = ({ className }: { className?: string }) => (
 
 // Map Chrome Group Colors to Pastel Tailwind classes
 export const GROUP_COLOR_MAP: Record<string, string> = {
-  grey: 'border-slate-300 text-slate-500 bg-slate-50',
-  blue: 'border-pastel-blue text-blue-500 bg-blue-50',
-  red: 'border-pastel-mint text-teal-600 bg-teal-50',
-  yellow: 'border-pastel-yellow text-yellow-600 bg-yellow-50',
-  green: 'border-pastel-green text-green-600 bg-green-50',
-  pink: 'border-pastel-mint text-teal-600 bg-teal-50',
-  purple: 'border-pastel-purple text-purple-600 bg-purple-50',
-  cyan: 'border-pastel-mint text-teal-500 bg-cyan-50',
-  orange: 'border-pastel-orange text-orange-500 bg-orange-50',
+  grey: 'border-slate-300 text-slate-600 bg-slate-50',
+  blue: 'border-blue-300 text-blue-600 bg-blue-50',
+  red: 'border-red-300 text-red-600 bg-red-50',
+  yellow: 'border-yellow-300 text-yellow-600 bg-yellow-50',
+  green: 'border-green-300 text-green-600 bg-green-50',
+  pink: 'border-pink-300 text-pink-600 bg-pink-50',
+  purple: 'border-purple-300 text-purple-600 bg-purple-50',
+  cyan: 'border-cyan-300 text-cyan-600 bg-cyan-50',
+  orange: 'border-orange-300 text-orange-600 bg-orange-50',
 };
 
 // Mock Groups to demonstrate UI

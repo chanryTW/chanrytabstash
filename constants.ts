@@ -10,15 +10,15 @@ const iconProps = (className?: string) => ({
   viewBox: "0 0 24 24",
   fill: "none",
   stroke: "currentColor",
-  strokeWidth: "1.5", // Thinner stroke for tech look
-  strokeLinecap: "square" as const, // Square caps for mecha look
-  strokeLinejoin: "miter" as const,
+  strokeWidth: "2", // Thicker stroke for cuter look
+  strokeLinecap: "round" as const, // Round caps for cute look
+  strokeLinejoin: "round" as const,
   className
 });
 
 export const ArchiveIcon = ({ className }: { className?: string }) => (
   React.createElement("svg", iconProps(className),
-    React.createElement("rect", { width: "20", height: "5", x: "2", y: "3" }),
+    React.createElement("rect", { width: "20", height: "5", x: "2", y: "3", rx: "1" }),
     React.createElement("path", { d: "M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8" }),
     React.createElement("path", { d: "M10 12h4" })
   )
@@ -44,7 +44,7 @@ export const SparklesIcon = ({ className }: { className?: string }) => (
 export const RefreshIcon = ({ className }: { className?: string }) => (
   React.createElement("svg", iconProps(className),
     React.createElement("path", { d: "M21 12a9 9 0 1 1-6.219-8.56" }),
-    React.createElement("path", { d: "M21 3v9h-9" }) // Sharper arrow
+    React.createElement("path", { d: "M21 3v9h-9" })
   )
 );
 
@@ -78,23 +78,23 @@ export const XIcon = ({ className }: { className?: string }) => (
   )
 );
 
-// Map Chrome Group Colors to Cyberpunk Tailwind classes (using borders/text mostly)
+// Map Chrome Group Colors to Pastel Tailwind classes
 export const GROUP_COLOR_MAP: Record<string, string> = {
-  grey: 'border-gray-500 text-gray-400',
-  blue: 'border-blue-500 text-blue-400',
-  red: 'border-red-500 text-red-400',
-  yellow: 'border-yellow-400 text-yellow-300',
-  green: 'border-green-500 text-green-400',
-  pink: 'border-pink-500 text-pink-400',
-  purple: 'border-purple-500 text-purple-400',
-  cyan: 'border-cyan-400 text-cyan-300',
-  orange: 'border-orange-500 text-orange-400',
+  grey: 'border-slate-300 text-slate-500 bg-slate-50',
+  blue: 'border-pastel-blue text-blue-500 bg-blue-50',
+  red: 'border-pastel-mint text-teal-600 bg-teal-50',
+  yellow: 'border-pastel-yellow text-yellow-600 bg-yellow-50',
+  green: 'border-pastel-green text-green-600 bg-green-50',
+  pink: 'border-pastel-mint text-teal-600 bg-teal-50',
+  purple: 'border-pastel-purple text-purple-600 bg-purple-50',
+  cyan: 'border-pastel-mint text-teal-500 bg-cyan-50',
+  orange: 'border-pastel-orange text-orange-500 bg-orange-50',
 };
 
 // Mock Groups to demonstrate UI
 export const MOCK_GROUPS: ChromeTabGroup[] = [
-  { id: 1, title: "CORE_SYSTEMS", color: 'cyan', collapsed: false },
-  { id: 2, title: "EXTERNAL_UPLINKS", color: 'purple', collapsed: false }
+  { id: 1, title: "Daily Reads", color: 'pink', collapsed: false },
+  { id: 2, title: "Study Mat", color: 'purple', collapsed: false }
 ];
 
 export const MOCK_TABS: ChromeTab[] = [

@@ -18,33 +18,29 @@ const SessionCard: React.FC<SessionCardProps> = ({ session, onRestore, onDelete,
   const [isHovered, setIsHovered] = useState(false);
   
   // Resolve style class
-  const colorClass = session.groupColor ? GROUP_COLOR_MAP[session.groupColor] : 'border-cyan-500/50 text-cyan-400';
+  const colorClass = session.groupColor ? GROUP_COLOR_MAP[session.groupColor] : 'bg-white border-teal-200 text-teal-600';
 
   return (
     <div 
-      className="relative bg-black border border-gray-800 p-1 hover:border-cyan-500/50 transition-all group clip-corner"
+      className={`relative border-2 rounded-2xl p-4 transition-all group overflow-hidden shadow-sm hover:shadow-md ${colorClass.split(' ')[0]} ${colorClass.split(' ')[2] || 'bg-white'}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Decorative corner lines */}
-      <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-gray-600 group-hover:border-cyan-400 transition-colors"></div>
-      <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-gray-600 group-hover:border-cyan-400 transition-colors"></div>
-
-      <div className="bg-gray-900/30 p-3 h-full flex flex-col">
-        <div className="flex justify-between items-start mb-3 border-b border-gray-800 pb-2">
+      <div className="flex flex-col h-full relative z-10">
+        <div className="flex justify-between items-start mb-3 border-b border-black/5 pb-3">
           <div className="flex-1 min-w-0">
-            <h3 className={`text-sm font-bold uppercase tracking-wider truncate flex items-center gap-2 ${colorClass.split(' ')[1]}`}>
-              <LayersIcon className="w-3 h-3" />
+            <h3 className={`text-sm font-bold tracking-wide truncate flex items-center gap-2 ${colorClass.split(' ')[1] || 'text-gray-700'}`}>
+              <LayersIcon className="w-5 h-5" />
               {session.name}
             </h3>
-            <p className="text-[10px] text-gray-500 font-mono mt-0.5">
-              ID: {session.id.slice(-6)} // {new Date(session.createdAt).toLocaleDateString()}
+            <p className="text-[10px] text-gray-400 font-bold mt-1">
+              {new Date(session.createdAt).toLocaleDateString()}
             </p>
           </div>
           
           <button 
             onClick={() => onDelete(session.id)}
-            className="text-gray-600 hover:text-red-500 transition-colors p-1"
+            className="text-gray-400 hover:text-red-500 transition-colors p-1.5 hover:bg-red-50 rounded-lg"
             title={labels.purge}
           >
             <TrashIcon className="w-4 h-4" />
@@ -52,15 +48,15 @@ const SessionCard: React.FC<SessionCardProps> = ({ session, onRestore, onDelete,
         </div>
 
         {/* Tab Preview (Data Lines) */}
-        <div className="flex-1 space-y-1 mb-4">
+        <div className="flex-1 space-y-1.5 mb-4">
           {session.tabs.slice(0, 3).map((tab, idx) => (
-            <div key={`${session.id}-tab-${idx}`} className="flex items-center gap-2 text-[10px] text-gray-500 font-mono">
-              <span className="text-gray-700">0{idx + 1}</span>
+            <div key={`${session.id}-tab-${idx}`} className="flex items-center gap-2 text-[11px] text-gray-500 font-medium">
+              <span className="text-gray-400 w-4 font-bold">{idx + 1}.</span>
               <span className="truncate">{tab.title}</span>
             </div>
           ))}
           {session.tabs.length > 3 && (
-            <div className="text-[10px] text-gray-700 pl-4 font-mono">
+            <div className="text-[10px] text-gray-400 pl-6 font-bold bg-black/5 py-0.5 rounded inline-block mt-1">
               + {session.tabs.length - 3} {labels.more}
             </div>
           )}
@@ -68,9 +64,9 @@ const SessionCard: React.FC<SessionCardProps> = ({ session, onRestore, onDelete,
 
         <button
           onClick={() => onRestore(session)}
-          className="w-full py-2 bg-gray-900 border border-gray-700 hover:bg-cyan-900/30 hover:border-cyan-500 hover:text-cyan-400 text-gray-400 text-xs font-bold uppercase tracking-widest transition-all clip-corner flex items-center justify-center gap-2"
+          className="w-full py-2.5 bg-white border border-gray-200 hover:bg-gray-50 hover:border-gray-300 text-gray-600 focus:ring-4 focus:ring-gray-100 text-xs font-bold transition-all rounded-xl shadow-sm flex items-center justify-center gap-2 mt-auto"
         >
-          <ExternalLinkIcon className="w-3 h-3" />
+          <ExternalLinkIcon className="w-4 h-4" />
           {labels.init}
         </button>
       </div>

@@ -9,9 +9,20 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Orbitron', 'Noto Sans TC', 'Noto Sans JP', 'sans-serif'],
-        mono: ['Share Tech Mono', 'monospace'],
+        sans: ['Nunito', 'Noto Sans TC', 'Noto Sans JP', 'sans-serif'],
+        mono: ['Fira Code', 'monospace'],
       },
+      colors: {
+        pastel: {
+          blue: '#BBE5ED',
+          pink: '#FFC1CC',
+          yellow: '#FDF7B4',
+          green: '#B5EAD7',
+          purple: '#D9C3F0',
+          orange: '#FFD6A5',
+          mint: '#C7EDD2',
+        }
+      }
     },
   },
   plugins: [],

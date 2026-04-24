@@ -43,8 +43,8 @@ export const translations = {
     // Alerts
     errNameRequired: "Please enter a group name.",
     warnDelete: "Are you sure you want to delete this session?",
-    updateAvailable: "✨ A new version is available!",
-    downloadUpdate: "Download update",
+    updateAvailable: "✨ A new version is ready!",
+    downloadUpdate: "Apply update now",
 
     // Dynamic
     groupPrefix: "Group",
@@ -93,8 +93,8 @@ export const translations = {
     // Alerts
     errNameRequired: "請為這個群組命名！",
     warnDelete: "確定要刪除這筆紀錄嗎？此動作無法復原。",
-    updateAvailable: "✨ 有新版本釋出了！",
-    downloadUpdate: "前往下載最新版本",
+    updateAvailable: "✨ 有新版本已就緒！",
+    downloadUpdate: "立即重新載入並套用",
 
     // Dynamic
     groupPrefix: "群組",
@@ -143,8 +143,8 @@ export const translations = {
     // Alerts
     errNameRequired: "グループ名を入力してください。",
     warnDelete: "このセッションを削除してもよろしいですか？",
-    updateAvailable: "✨ 新しいバージョンが利用可能です！",
-    downloadUpdate: "最新版をダウンロード",
+    updateAvailable: "✨ 新しいバージョンが準備完了しました！",
+    downloadUpdate: "再読み込みして適用",
 
     // Dynamic
     groupPrefix: "グループ",

@@ -7,9 +7,6 @@ import TabItem from './components/TabItem';
 import SessionCard from './components/SessionCard';
 import { ArchiveIcon, SparklesIcon, RefreshIcon, LayersIcon, GROUP_COLOR_MAP, SettingsIcon, XIcon } from './constants';
 import { translations } from './locales';
-import pkg from './package.json';
-
-const LOCAL_VERSION = pkg.version;
 
 function App() {
   const [activeTabs, setActiveTabs] = useState<ChromeTab[]>([]);
@@ -56,28 +53,13 @@ function App() {
   useEffect(() => {
     refreshData();
     
-    // Check for updates from GitHub
-    const checkUpdate = async () => {
-      try {
-        const response = await fetch('https://raw.githubusercontent.com/chanryTW/chanrytabstash/main/package.json', { cache: 'no-store' });
-        if (response.ok) {
-          const remotePkg = await response.json();
-          if (remotePkg.version && remotePkg.version !== LOCAL_VERSION) {
-             const localParts = LOCAL_VERSION.split('.').map(Number);
-             const remoteParts = remotePkg.version.split('.').map(Number);
-             let isNewer = false;
-             for (let i = 0; i < 3; i++) {
-               if (remoteParts[i] > localParts[i]) { isNewer = true; break; }
-               if (remoteParts[i] < localParts[i]) { break; }
-             }
-             if (isNewer) setUpdateAvailable(true);
-          }
-        }
-      } catch (e) {
-        console.error('Failed to check updates', e);
-      }
-    };
-    checkUpdate();
+    // Check for updates from Chrome Web Store mechanism
+    const globalChrome = typeof window !== 'undefined' ? (window as any).chrome : undefined;
+    if (globalChrome && globalChrome.runtime && globalChrome.runtime.onUpdateAvailable) {
+      globalChrome.runtime.onUpdateAvailable.addListener(() => {
+        setUpdateAvailable(true);
+      });
+    }
   }, []);
 
   const changeLanguage = (l: Language) => {
@@ -279,10 +261,10 @@ function App() {
       
       {updateAvailable && (
         <div className="bg-gradient-to-r from-teal-500 to-emerald-500 text-white text-center py-2.5 px-4 shadow-sm z-50 relative font-bold text-xs flex items-center justify-center gap-2">
-          {t.updateAvailable || "✨ 有新版本可供更新！"} 
-          <a href="https://github.com/chanryTW/chanrytabstash/releases" target="_blank" rel="noreferrer" className="underline hover:text-teal-100 transition-colors bg-black/10 px-2 py-0.5 rounded-full ml-2">
-            {t.downloadUpdate || "前往下載最新版本"}
-          </a>
+          {t.updateAvailable || "✨ 有新版本已就緒！"} 
+          <button onClick={() => { const gc = (window as any).chrome; if (gc?.runtime?.reload) gc.runtime.reload(); }} className="underline hover:text-teal-100 transition-colors bg-black/10 px-2 py-0.5 rounded-full ml-2">
+            {t.downloadUpdate || "立即重新載入並套用"}
+          </button>
         </div>
       )}
 

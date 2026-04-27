@@ -5,7 +5,7 @@ import { chromeService } from './services/chromeService';
 import { geminiService } from './services/geminiService';
 import TabItem from './components/TabItem';
 import SessionCard from './components/SessionCard';
-import { ArchiveIcon, GeminiIcon, RefreshIcon, LayersIcon, GROUP_COLOR_MAP, SettingsIcon, XIcon } from './constants';
+import { ArchiveIcon, GeminiIcon, RefreshIcon, LayersIcon, TrashIcon, GROUP_COLOR_MAP, SettingsIcon, XIcon } from './constants';
 import { translations } from './locales';
 
 const SUPPORTED_LANGS: Language[] = ['en', 'zh', 'ja', 'es', 'de', 'fr', 'ko', 'pt', 'ru'];
@@ -37,6 +37,7 @@ function App() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [sessionNameInput, setSessionNameInput] = useState('');
   const [showNameModal, setShowNameModal] = useState(false);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [view, setView] = useState<'current' | 'saved'>('current');
   const [lang, setLang] = useState<Language>(() => {
     // Priority: stored preference → browser language → 'en'
@@ -216,11 +217,16 @@ function App() {
     refreshData();
   };
 
-  const handleDeleteSession = async (id: string) => {
-    if (!confirm(t.warnDelete)) return;
-    const updated = savedSessions.filter(s => s.id !== id);
+  const handleDeleteSession = (id: string) => {
+    setDeleteConfirmId(id);
+  };
+
+  const executeDelete = async () => {
+    if (!deleteConfirmId) return;
+    const updated = savedSessions.filter(s => s.id !== deleteConfirmId);
     await chromeService.saveSessions(updated);
     setSavedSessions(updated);
+    setDeleteConfirmId(null);
   };
 
   // Render Logic
@@ -379,6 +385,35 @@ function App() {
         </div>
       )}
 
+      {/* Delete Confirm Modal */}
+      {deleteConfirmId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm p-4 transition-all">
+          <div className="bg-white rounded-2xl w-full max-w-sm p-6 shadow-xl border border-gray-100">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center shrink-0">
+                <TrashIcon className="w-5 h-5 text-red-400" />
+              </div>
+              <h2 className="text-base font-bold text-gray-800">{t.sessionPurge}</h2>
+            </div>
+            <p className="text-sm text-gray-500 font-medium mb-6 leading-relaxed">{t.warnDelete}</p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setDeleteConfirmId(null)}
+                className="flex-1 py-3 text-sm font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all"
+              >
+                {t.cancel}
+              </button>
+              <button
+                onClick={executeDelete}
+                className="flex-1 py-3 bg-red-500 text-white hover:bg-red-600 focus:ring-4 focus:ring-red-400/30 rounded-xl text-sm font-bold transition-all shadow-md"
+              >
+                {t.sessionPurge}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <header className="bg-white/80 border-b border-gray-100 p-4 sticky top-0 z-20 backdrop-blur-md shadow-sm">
         <div className="max-w-2xl mx-auto flex items-center justify-between">
@@ -467,10 +502,10 @@ function App() {
                   <button
                     onClick={openManualModal}
                     disabled={isProcessing || selectedTabIds.size === 0}
-                    className="w-full h-full min-h-[92px] bg-slate-700 hover:bg-slate-800 text-white rounded-xl focus:ring-4 focus:ring-slate-500/30 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-bold py-3 transition-all flex flex-col items-center justify-center gap-2 shadow-md shadow-slate-200/60 group-hover:shadow-lg"
+                    className="w-full h-full min-h-[92px] bg-white hover:bg-slate-50 text-gray-700 border-2 border-slate-200 hover:border-slate-300 rounded-xl focus:ring-4 focus:ring-slate-100 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-bold py-3 transition-all flex flex-col items-center justify-center gap-2 shadow-sm hover:shadow-md"
                   >
-                    <LayersIcon className="w-6 h-6 group-hover:scale-110 transition-transform" />
-                    <span>{t.executeSave}</span>
+                    <LayersIcon className="w-6 h-6 text-teal-500 group-hover:scale-110 transition-transform" />
+                    <span className='text-teal-500'>{t.executeSave}</span>
                   </button>
                 </div>
               </div>

@@ -105,9 +105,24 @@ export const MOCK_GROUPS: ChromeTabGroup[] = [
 ];
 
 export const MOCK_TABS: ChromeTab[] = [
+  // Group 1 — Daily Reads
   { id: 101, groupId: 1, title: "Google Gemini API // Neural Net", url: "https://ai.google.dev", favIconUrl: "https://www.gstatic.com/lamda/images/gemini_favicon_f069958c85030456e93de685481c559f160ea06b.png", active: true },
   { id: 102, groupId: 1, title: "React Core // Documentation", url: "https://react.dev", favIconUrl: "https://react.dev/favicon.ico", active: false },
+  { id: 106, groupId: 1, title: "TypeScript Handbook // Lang Ref", url: "https://www.typescriptlang.org/docs/", favIconUrl: "https://www.typescriptlang.org/favicon-32x32.png", active: false },
+  { id: 107, groupId: 1, title: "Vite // Next Gen Frontend Tooling", url: "https://vitejs.dev", favIconUrl: "https://vitejs.dev/logo.svg", active: false },
+  { id: 108, groupId: 1, title: "Tailwind CSS Docs // Utility First", url: "https://tailwindcss.com/docs", favIconUrl: "https://tailwindcss.com/favicons/favicon-32x32.png", active: false },
+
+  // Group 2 — Study Mat
   { id: 103, groupId: 2, title: "Chanry's Portfolio // Uplink", url: "https://chanrytw.github.io/", favIconUrl: "", active: false },
+  { id: 109, groupId: 2, title: "MDN Web Docs // CSS Reference", url: "https://developer.mozilla.org/en-US/docs/Web/CSS", favIconUrl: "https://developer.mozilla.org/favicon-48x48.png", active: false },
+  { id: 110, groupId: 2, title: "Chrome Extensions API Reference", url: "https://developer.chrome.com/docs/extensions/reference/", favIconUrl: "https://www.gstatic.com/devrel-devsite/prod/v870e399c64f7c43c99a3043db4b3a74327bb93d0914e84a0c3dba90bbfd67625/chrome/images/favicon.png", active: false },
+  { id: 111, groupId: 2, title: "Stack Overflow // Dev Q&A", url: "https://stackoverflow.com", favIconUrl: "https://cdn.sstatic.net/Sites/stackoverflow/Img/favicon.ico", active: false },
+
+  // Ungrouped
   { id: 104, groupId: -1, title: "GitHub // Repository Data", url: "https://github.com/google/genai", favIconUrl: "https://github.com/fluidicon.png", active: false },
   { id: 105, groupId: -1, title: "Cyberpunk Ambience // Audio Stream", url: "https://youtube.com", favIconUrl: "https://www.youtube.com/s/desktop/03f0b22a/img/favicon.ico", active: false },
+  { id: 112, groupId: -1, title: "Figma // Design Workspace", url: "https://figma.com", favIconUrl: "https://static.figma.com/app/icon/1/favicon.png", active: false },
+  { id: 113, groupId: -1, title: "Notion // Project Notes", url: "https://notion.so", favIconUrl: "https://www.notion.so/images/favicon.ico", active: false },
+  { id: 114, groupId: -1, title: "Linear // Issue Tracker", url: "https://linear.app", favIconUrl: "https://linear.app/favicon.ico", active: false },
+  { id: 115, groupId: -1, title: "Vercel Dashboard // Deployments", url: "https://vercel.com/dashboard", favIconUrl: "https://assets.vercel.com/image/upload/front/favicon/vercel/favicon.ico", active: false },
 ];

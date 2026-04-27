@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "ChanryTabStash",
+    "description": "El nombre de la extensión"
+  },
+  "appDescription": {
+    "message": "Guarda y restaura grupos de pestañas fácilmente. Con Google Gemini AI, categoriza automáticamente tus pestañas con un solo clic. ¡Navega sin caos!",
+    "description": "Descripción corta en Chrome Web Store (límite 132 caracteres)"
+  }
+}

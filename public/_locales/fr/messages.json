@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "ChanryTabStash",
+    "description": "Le nom de l'extension"
+  },
+  "appDescription": {
+    "message": "Sauvegardez et restaurez vos groupes d'onglets facilement. Propulsé par Google Gemini AI pour catégoriser vos onglets en un clic. Fini le chaos !",
+    "description": "Description courte sur le Chrome Web Store (limite 132 caractères)"
+  }
+}

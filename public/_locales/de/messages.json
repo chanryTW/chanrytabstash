@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "ChanryTabStash",
+    "description": "Der Name der Erweiterung"
+  },
+  "appDescription": {
+    "message": "Tabs-Gruppen mühelos speichern & wiederherstellen. Mit Google Gemini AI per Klick automatisch kategorisieren. Schluss mit Tab-Chaos!",
+    "description": "Kurzbeschreibung im Chrome Web Store (max. 132 Zeichen)"
+  }
+}

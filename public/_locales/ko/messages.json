@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "ChanryTabStash",
+    "description": "확장 프로그램 이름"
+  },
+  "appDescription": {
+    "message": "탭 그룹을 손쉽게 저장하고 복원하세요. Google Gemini AI로 한 번의 클릭으로 열린 탭을 자동 분류합니다. 탭 혼란에서 해방되세요!",
+    "description": "Chrome 웹 스토어 짧은 설명 (132자 제한)"
+  }
+}

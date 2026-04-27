@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "ChanryTabStash",
+    "description": "擴充套件名稱"
+  },
+  "appDescription": {
+    "message": "輕鬆收藏與還原分頁群組。由 Google Gemini AI 驅動，一鍵自動分類整理所有開啟中的分頁，告別雜亂分頁，享受清爽的瀏覽體驗！",
+    "description": "顯示在 Chrome 線上應用程式商店的簡短說明（132 字元限制）"
+  }
+}

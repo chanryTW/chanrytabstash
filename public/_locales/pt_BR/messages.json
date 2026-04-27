@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "ChanryTabStash",
+    "description": "O nome da extensão"
+  },
+  "appDescription": {
+    "message": "Salve e restaure grupos de abas facilmente. Com Google Gemini AI, categorize automaticamente suas abas abertas com um clique. Adeus à bagunça!",
+    "description": "Descrição curta no Chrome Web Store (limite de 132 caracteres)"
+  }
+}

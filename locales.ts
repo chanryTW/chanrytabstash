@@ -67,7 +67,7 @@ export const translations = {
 
     // Grouping
     manualSaveTitle: "手動分組",
-    manualSaveDesc: "將右側選取的分頁，全部加入到同一個自訂群組中。",
+    manualSaveDesc: "將選取的分頁，全部加入到同一個自訂群組中。",
     enterSessionId: "輸入這個群組的名字...",
     executeSave: "建立手動群組",
 

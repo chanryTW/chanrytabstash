@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "ChanryTabStash",
+    "description": "Название расширения"
+  },
+  "appDescription": {
+    "message": "Сохраняйте и восстанавливайте группы вкладок легко. Google Gemini AI автоматически классифицирует ваши вкладки одним кликом. Долой хаос в браузере!",
+    "description": "Краткое описание в Chrome Web Store (лимит 132 символа)"
+  }
+}

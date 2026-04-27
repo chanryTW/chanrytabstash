@@ -32,14 +32,21 @@ export const LayersIcon = ({ className }: { className?: string }) => (
   )
 );
 
-export const SparklesIcon = ({ className }: { className?: string }) => (
-  React.createElement("svg", iconProps(className),
-    React.createElement("path", { d: "M2 12h20" }),
-    React.createElement("path", { d: "M12 2v20" }),
-    React.createElement("path", { d: "m4.93 4.93 14.14 14.14" }),
-    React.createElement("path", { d: "m19.07 4.93-14.14 14.14" })
-  )
-);
+// Gemini four-pointed star icon — uses currentColor so it inherits text colour from parent
+export const GeminiIcon = ({ className }: { className?: string }) =>
+  React.createElement(
+    "svg",
+    {
+      xmlns: "http://www.w3.org/2000/svg",
+      viewBox: "0 0 24 24",
+      fill: "currentColor",
+      className,
+    },
+    // Accurate Gemini wavy-diamond: concave curves between the four tips
+    React.createElement("path", {
+      d: "M12 2C12 2 14.5 9 22 12C14.5 15 12 22 12 22C12 22 9.5 15 2 12C9.5 9 12 2 12 2Z",
+    })
+  );
 
 export const RefreshIcon = ({ className }: { className?: string }) => (
   React.createElement("svg", iconProps(className),

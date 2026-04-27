@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "ChanryTabStash",
+    "description": "拡張機能の名前"
+  },
+  "appDescription": {
+    "message": "タブグループを簡単に保存・復元。Google Gemini AI搭載で、開いているタブをワンクリックで自動分類。すっきりしたブラウジングを！",
+    "description": "Chrome ウェブストアに表示される短い説明（132文字以内）"
+  }
+}

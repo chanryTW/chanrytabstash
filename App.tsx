@@ -5,7 +5,7 @@ import { chromeService } from './services/chromeService';
 import { geminiService } from './services/geminiService';
 import TabItem from './components/TabItem';
 import SessionCard from './components/SessionCard';
-import { ArchiveIcon, SparklesIcon, RefreshIcon, LayersIcon, GROUP_COLOR_MAP, SettingsIcon, XIcon } from './constants';
+import { ArchiveIcon, GeminiIcon, RefreshIcon, LayersIcon, GROUP_COLOR_MAP, SettingsIcon, XIcon } from './constants';
 import { translations } from './locales';
 
 const SUPPORTED_LANGS: Language[] = ['en', 'zh', 'ja', 'es', 'de', 'fr', 'ko', 'pt', 'ru'];
@@ -36,6 +36,7 @@ function App() {
   const [selectedTabIds, setSelectedTabIds] = useState<TabSelection>(new Set());
   const [isProcessing, setIsProcessing] = useState(false);
   const [sessionNameInput, setSessionNameInput] = useState('');
+  const [showNameModal, setShowNameModal] = useState(false);
   const [view, setView] = useState<'current' | 'saved'>('current');
   const [lang, setLang] = useState<Language>(() => {
     // Priority: stored preference → browser language → 'en'
@@ -115,12 +116,18 @@ function App() {
     }
   };
 
-  const handleManualSave = async () => {
+  const openManualModal = () => {
     if (selectedTabIds.size === 0) return;
+    setSessionNameInput('');
+    setShowNameModal(true);
+  };
+
+  const confirmManualSave = async () => {
     if (!sessionNameInput.trim()) {
       alert(t.errNameRequired);
       return;
     }
+    setShowNameModal(false);
     await performSave(sessionNameInput, Array.from(selectedTabIds), undefined);
     setSessionNameInput('');
   };
@@ -336,6 +343,42 @@ function App() {
         </div>
       )}
 
+      {/* Name Input Modal */}
+      {showNameModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm p-4 transition-all">
+          <div className="bg-white rounded-2xl w-full max-w-sm p-6 relative shadow-xl border border-gray-100">
+            <h2 className="text-lg font-bold text-gray-800 mb-1 flex items-center gap-2">
+              <LayersIcon className="w-5 h-5 text-gray-500" />
+              {t.manualSaveTitle}
+            </h2>
+            <p className="text-xs text-gray-400 font-bold mb-5">{selectedTabIds.size} tabs selected</p>
+            <input
+              type="text"
+              autoFocus
+              placeholder={t.enterSessionId}
+              value={sessionNameInput}
+              onChange={(e) => setSessionNameInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && confirmManualSave()}
+              className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl text-sm px-4 py-3 text-gray-800 font-bold focus:border-teal-400 focus:ring-4 focus:ring-teal-400/20 outline-none transition-all placeholder-gray-400 mb-5"
+            />
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowNameModal(false)}
+                className="flex-1 py-3 text-sm font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all"
+              >
+                {t.cancel}
+              </button>
+              <button
+                onClick={confirmManualSave}
+                className="flex-1 py-3 bg-slate-700 text-white hover:bg-slate-800 focus:ring-4 focus:ring-slate-500/30 rounded-xl text-sm font-bold transition-all shadow-md"
+              >
+                {t.confirm}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <header className="bg-white/80 border-b border-gray-100 p-4 sticky top-0 z-20 backdrop-blur-md shadow-sm">
         <div className="max-w-2xl mx-auto flex items-center justify-between">
@@ -421,20 +464,13 @@ function App() {
                   <p className="text-[11px] text-gray-500 font-bold leading-relaxed">{t.manualSaveDesc}</p>
                 </div>
                 <div className="flex flex-col gap-2 mt-auto">
-                  <input
-                    type="text"
-                    placeholder={t.enterSessionId}
-                    value={sessionNameInput}
-                    onChange={(e) => setSessionNameInput(e.target.value)}
-                    className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl text-xs px-3 py-2.5 text-gray-800 font-bold focus:border-teal-400 focus:ring-4 focus:ring-teal-400/20 outline-none transition-all placeholder-gray-400"
-                  />
                   <button
-                    onClick={handleManualSave}
+                    onClick={openManualModal}
                     disabled={isProcessing || selectedTabIds.size === 0}
-                    className="w-full bg-white hover:bg-slate-50 text-gray-700 border-2 border-slate-200 rounded-xl focus:ring-4 focus:ring-slate-100 disabled:opacity-50 disabled:cursor-not-allowed text-xs font-bold py-2.5 transition-all flex items-center justify-center gap-2 shadow-sm"
+                    className="w-full h-full min-h-[92px] bg-slate-700 hover:bg-slate-800 text-white rounded-xl focus:ring-4 focus:ring-slate-500/30 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-bold py-3 transition-all flex flex-col items-center justify-center gap-2 shadow-md shadow-slate-200/60 group-hover:shadow-lg"
                   >
-                    <LayersIcon className="w-4 h-4 text-gray-500" />
-                    {t.executeSave}
+                    <LayersIcon className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                    <span>{t.executeSave}</span>
                   </button>
                 </div>
               </div>
@@ -457,7 +493,7 @@ function App() {
                     {isProcessing ? (
                       <RefreshIcon className="w-6 h-6 animate-spin" />
                     ) : (
-                      <SparklesIcon className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                      <GeminiIcon className="w-7 h-7 group-hover:scale-110 transition-transform drop-shadow-sm" />
                     )}
                     <span>{t.aiAnalyze}</span>
                   </button>

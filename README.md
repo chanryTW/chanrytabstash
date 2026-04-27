@@ -1,6 +1,10 @@
 # ChanryTabStash
 
-![ChanryTabStash Hero Image](public/hero.png)
+![ChanryTabStash Hero Image](public/promo_1280x800_1_hero_1.jpg)
+![ChanryTabStash Screenshot 1](public/promo_1280x800_2_manual_1.jpg)
+![ChanryTabStash Screenshot 2](public/promo_1280x800_3_ai_1.jpg)
+![ChanryTabStash Screenshot 3](public/promo_1280x800_4_restore_1.jpg)
+![ChanryTabStash Screenshot 4](public/promo_1280x800_5_multilang_1.jpg)
 
 **ChanryTabStash** 是一個現代、清新可愛風格的 Chrome 分頁管理擴充功能。
 針對常常開了幾十個分頁卻無從整理的你，提供「手動自訂群組」以及「**AI 智慧多重分類**」幫助您一鍵把凌亂的分頁歸檔收納！

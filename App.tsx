@@ -8,6 +8,27 @@ import SessionCard from './components/SessionCard';
 import { ArchiveIcon, SparklesIcon, RefreshIcon, LayersIcon, GROUP_COLOR_MAP, SettingsIcon, XIcon } from './constants';
 import { translations } from './locales';
 
+const SUPPORTED_LANGS: Language[] = ['en', 'zh', 'ja', 'es', 'de', 'fr', 'ko', 'pt', 'ru'];
+
+/**
+ * Map navigator.language (e.g. "zh-TW", "pt-BR") to one of our supported Language codes.
+ * Falls back to 'en' if no match.
+ */
+function detectBrowserLanguage(): Language {
+  const nav = navigator.language || (navigator as any).userLanguage || 'en';
+  const primary = nav.split('-')[0].toLowerCase(); // e.g. "zh", "pt", "en"
+  const full = nav.toLowerCase(); // e.g. "zh-tw", "pt-br"
+  console.log(navigator.language)
+  // Special case: Chinese variants
+  if (primary === 'zh') return 'zh';
+
+  const map: Record<string, Language> = {
+    ja: 'ja', ko: 'ko', es: 'es', de: 'de',
+    fr: 'fr', pt: 'pt', ru: 'ru', en: 'en',
+  };
+  return map[primary] ?? 'en';
+}
+
 function App() {
   const [activeTabs, setActiveTabs] = useState<ChromeTab[]>([]);
   const [tabGroups, setTabGroups] = useState<ChromeTabGroup[]>([]);
@@ -16,9 +37,14 @@ function App() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [sessionNameInput, setSessionNameInput] = useState('');
   const [view, setView] = useState<'current' | 'saved'>('current');
-  const [lang, setLang] = useState<Language>('zh'); // Default to zh
+  const [lang, setLang] = useState<Language>(() => {
+    // Priority: stored preference → browser language → 'en'
+    const stored = localStorage.getItem('chanry_app_lang');
+    if (stored && (SUPPORTED_LANGS as string[]).includes(stored)) return stored as Language;
+    return detectBrowserLanguage();
+  });
   const [updateAvailable, setUpdateAvailable] = useState(false);
-  
+
   // Settings / API Key State
   const [showSettings, setShowSettings] = useState(false);
   const [apiKey, setApiKey] = useState('');
@@ -30,29 +56,30 @@ function App() {
   const refreshData = useCallback(async () => {
     const tabs = await chromeService.getTabs();
     const groups = await chromeService.getTabGroups();
-    
+
     setActiveTabs(tabs);
     setTabGroups(groups);
     setSelectedTabIds(new Set()); // Deselect all by default
-    
+
     const sessions = await chromeService.loadSessions();
     setSavedSessions(sessions);
-    
+
     // Load API Key
     const storedKey = localStorage.getItem('chanry_gemini_api_key');
     if (storedKey) setApiKey(storedKey);
 
-    // Load Lang
+    // Load Lang — only override if user has explicitly set a preference
     const storedLang = localStorage.getItem('chanry_app_lang');
-    if (storedLang && (['en', 'zh', 'ja'] as const).includes(storedLang as any)) {
+    if (storedLang && (SUPPORTED_LANGS as string[]).includes(storedLang)) {
       setLang(storedLang as Language);
     }
+    // If no stored pref, the useState initializer already detected the browser language
 
   }, []);
 
   useEffect(() => {
     refreshData();
-    
+
     // Check for updates from Chrome Web Store mechanism
     const globalChrome = typeof window !== 'undefined' ? (window as any).chrome : undefined;
     if (globalChrome && globalChrome.runtime && globalChrome.runtime.onUpdateAvailable) {
@@ -124,7 +151,7 @@ function App() {
 
   const handleAISave = async () => {
     if (selectedTabIds.size === 0) return;
-    
+
     // Check API Key
     if (!apiKey) {
       setShowSettings(true);
@@ -133,10 +160,10 @@ function App() {
 
     setIsProcessing(true);
     const tabsToProcess = activeTabs.filter(t => selectedTabIds.has(t.id));
-    
+
     // Call Gemini with user key and language
     const result = await geminiService.categorizeTabs(tabsToProcess, apiKey, lang);
-    
+
     let newSessions: SavedSession[] = [];
     const tabsToClose: number[] = [];
 
@@ -145,8 +172,8 @@ function App() {
         const groupTabs = group.tabIndices.map(idx => tabsToProcess[idx]).filter(Boolean);
         if (groupTabs.length > 0) {
           newSessions.push({
-            id: Date.now().toString() + Math.random().toString().slice(2,6),
-            name: group.groupName, 
+            id: Date.now().toString() + Math.random().toString().slice(2, 6),
+            name: group.groupName,
             createdAt: Date.now(),
             tabs: groupTabs,
             tags: ['AI-Generated']
@@ -183,7 +210,7 @@ function App() {
   };
 
   const handleDeleteSession = async (id: string) => {
-    if(!confirm(t.warnDelete)) return;
+    if (!confirm(t.warnDelete)) return;
     const updated = savedSessions.filter(s => s.id !== id);
     await chromeService.saveSessions(updated);
     setSavedSessions(updated);
@@ -220,9 +247,9 @@ function App() {
               </div>
               <div className="p-2 space-y-1">
                 {groupTabs.map(tab => (
-                  <TabItem 
-                    key={tab.id} 
-                    tab={tab} 
+                  <TabItem
+                    key={tab.id}
+                    tab={tab}
                     isSelected={selectedTabIds.has(tab.id)}
                     onToggle={toggleTabSelection}
                   />
@@ -236,15 +263,15 @@ function App() {
         {ungroupedTabs.length > 0 && (
           <div className="cute-card p-2 border-slate-200 shadow-sm">
             <div className="mb-3 px-2 flex items-center justify-center gap-3 pt-2">
-               <div className="h-px bg-slate-200 flex-1"></div>
-               <h3 className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">{t.unsortedData}</h3>
-               <div className="h-px bg-slate-200 flex-1"></div>
+              <div className="h-px bg-slate-200 flex-1"></div>
+              <h3 className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">{t.unsortedData}</h3>
+              <div className="h-px bg-slate-200 flex-1"></div>
             </div>
             <div className="space-y-1">
               {ungroupedTabs.map(tab => (
-                <TabItem 
-                  key={tab.id} 
-                  tab={tab} 
+                <TabItem
+                  key={tab.id}
+                  tab={tab}
                   isSelected={selectedTabIds.has(tab.id)}
                   onToggle={toggleTabSelection}
                 />
@@ -258,10 +285,10 @@ function App() {
 
   return (
     <div className="relative w-full min-h-screen flex flex-col font-sans overflow-hidden bg-[var(--color-bg)]">
-      
+
       {updateAvailable && (
         <div className="bg-gradient-to-r from-teal-500 to-emerald-500 text-white text-center py-2.5 px-4 shadow-sm z-50 relative font-bold text-xs flex items-center justify-center gap-2">
-          {t.updateAvailable || "✨ 有新版本已就緒！"} 
+          {t.updateAvailable || "✨ 有新版本已就緒！"}
           <button onClick={() => { const gc = (window as any).chrome; if (gc?.runtime?.reload) gc.runtime.reload(); }} className="underline hover:text-teal-100 transition-colors bg-black/10 px-2 py-0.5 rounded-full ml-2">
             {t.downloadUpdate || "立即重新載入並套用"}
           </button>
@@ -280,7 +307,7 @@ function App() {
             </p>
             <div className="mb-6">
               <label className="text-xs uppercase text-gray-500 font-bold mb-2 block">{t.apiKeyLabel}</label>
-              <input 
+              <input
                 type="password"
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
@@ -292,13 +319,13 @@ function App() {
               </a>
             </div>
             <div className="flex gap-3">
-              <button 
+              <button
                 onClick={() => setShowSettings(false)}
                 className="flex-1 py-3 text-sm font-bold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-all"
               >
                 {t.cancel}
               </button>
-              <button 
+              <button
                 onClick={saveApiKey}
                 className="flex-1 py-3 bg-teal-500 text-white hover:bg-teal-600 focus:ring-4 focus:ring-teal-500/50 rounded-xl text-sm font-bold transition-all shadow-md shadow-teal-200"
               >
@@ -323,18 +350,28 @@ function App() {
               <p className="text-[11px] text-gray-500 font-bold tracking-wider mt-1">{t.sysVer}</p>
             </div>
           </div>
-          
+
           <div className="flex flex-col items-end gap-2">
-            
+
             {/* Language Switcher */}
-            <div className="flex text-xs font-bold bg-slate-100 rounded-lg p-0.5">
-               <button onClick={() => changeLanguage('en')} className={`px-2 py-1 rounded-md transition-all ${lang === 'en' ? 'bg-white shadow-sm text-teal-600' : 'text-gray-500 hover:text-gray-700'}`}>EN</button>
-               <button onClick={() => changeLanguage('zh')} className={`px-2 py-1 rounded-md transition-all ${lang === 'zh' ? 'bg-white shadow-sm text-teal-600' : 'text-gray-500 hover:text-gray-700'}`}>繁</button>
-               <button onClick={() => changeLanguage('ja')} className={`px-2 py-1 rounded-md transition-all ${lang === 'ja' ? 'bg-white shadow-sm text-teal-600' : 'text-gray-500 hover:text-gray-700'}`}>日</button>
-            </div>
+            <select
+              value={lang}
+              onChange={(e) => changeLanguage(e.target.value as any)}
+              className="text-xs font-bold bg-slate-100 border-0 rounded-lg px-2 py-1.5 text-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-400/50 cursor-pointer hover:bg-slate-200 transition-colors"
+            >
+              <option value="en">🇺🇸 English</option>
+              <option value="zh">🇹🇼 繁體中文</option>
+              <option value="ja">🇯🇵 日本語</option>
+              <option value="ko">🇰🇷 한국어</option>
+              <option value="es">🇪🇸 Español</option>
+              <option value="de">🇩🇪 Deutsch</option>
+              <option value="fr">🇫🇷 Français</option>
+              <option value="pt">🇧🇷 Português</option>
+              <option value="ru">🇷🇺 Русский</option>
+            </select>
 
             <div className="flex items-center gap-2 mt-1">
-              <button 
+              <button
                 onClick={() => setShowSettings(true)}
                 className="p-1.5 text-gray-500 hover:text-teal-600 hover:bg-teal-50 rounded-lg transition-all"
                 title={t.settingsTitle}
@@ -344,21 +381,19 @@ function App() {
               <div className="flex bg-slate-100 p-0.5 rounded-lg">
                 <button
                   onClick={() => setView('current')}
-                  className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${
-                    view === 'current' 
-                      ? 'bg-white shadow-sm text-gray-800' 
-                      : 'text-gray-500 hover:text-gray-700'
-                  }`}
+                  className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${view === 'current'
+                    ? 'bg-white shadow-sm text-gray-800'
+                    : 'text-gray-500 hover:text-gray-700'
+                    }`}
                 >
                   {t.activeView} <span className="ml-1 bg-slate-200 text-gray-700 px-1.5 py-0.5 rounded-full text-[10px]">{activeTabs.length}</span>
                 </button>
                 <button
                   onClick={() => setView('saved')}
-                  className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${
-                    view === 'saved' 
-                      ? 'bg-white shadow-sm text-purple-600' 
-                      : 'text-gray-500 hover:text-gray-700'
-                  }`}
+                  className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${view === 'saved'
+                    ? 'bg-white shadow-sm text-purple-600'
+                    : 'text-gray-500 hover:text-gray-700'
+                    }`}
                 >
                   {t.savedView} <span className="ml-1 bg-slate-200 text-gray-700 px-1.5 py-0.5 rounded-full text-[10px]">{savedSessions.length}</span>
                 </button>
@@ -370,7 +405,7 @@ function App() {
 
       {/* Main Content */}
       <main className="flex-1 max-w-2xl w-full mx-auto p-4 overflow-y-auto relative z-10">
-        
+
         {/* VIEW: ACTIVE TABS */}
         {view === 'current' && (
           <div className="space-y-6">
@@ -386,14 +421,14 @@ function App() {
                   <p className="text-[11px] text-gray-500 font-bold leading-relaxed">{t.manualSaveDesc}</p>
                 </div>
                 <div className="flex flex-col gap-2 mt-auto">
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     placeholder={t.enterSessionId}
                     value={sessionNameInput}
                     onChange={(e) => setSessionNameInput(e.target.value)}
                     className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl text-xs px-3 py-2.5 text-gray-800 font-bold focus:border-teal-400 focus:ring-4 focus:ring-teal-400/20 outline-none transition-all placeholder-gray-400"
                   />
-                  <button 
+                  <button
                     onClick={handleManualSave}
                     disabled={isProcessing || selectedTabIds.size === 0}
                     className="w-full bg-white hover:bg-slate-50 text-gray-700 border-2 border-slate-200 rounded-xl focus:ring-4 focus:ring-slate-100 disabled:opacity-50 disabled:cursor-not-allowed text-xs font-bold py-2.5 transition-all flex items-center justify-center gap-2 shadow-sm"
@@ -414,7 +449,7 @@ function App() {
                   <p className="text-[11px] text-teal-700 font-bold leading-relaxed opacity-80">{t.aiSaveDesc}</p>
                 </div>
                 <div className="flex flex-col gap-2 mt-auto">
-                  <button 
+                  <button
                     onClick={handleAISave}
                     disabled={isProcessing || selectedTabIds.size === 0}
                     className="w-full h-full min-h-[92px] bg-teal-500 hover:bg-teal-600 text-white rounded-xl focus:ring-4 focus:ring-teal-500/30 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-bold py-3 transition-all flex flex-col items-center justify-center gap-2 shadow-md shadow-teal-200"
@@ -433,7 +468,7 @@ function App() {
             {/* List Header */}
             <div className="flex justify-between items-center px-2 pb-2">
               <h2 className="text-sm font-bold text-slate-500">{t.targetSelection}</h2>
-              <button 
+              <button
                 onClick={toggleSelectAll}
                 className="text-xs text-teal-600 hover:text-teal-700 font-bold transition-colors bg-teal-50 hover:bg-teal-100 border border-teal-100 px-3 py-1.5 rounded-full"
               >
@@ -455,7 +490,7 @@ function App() {
                   <ArchiveIcon className="w-10 h-10 text-gray-400" />
                 </div>
                 <p className="font-bold text-sm tracking-wide">{t.noArchivedData}</p>
-                <button 
+                <button
                   onClick={() => setView('current')}
                   className="text-teal-600 hover:text-teal-700 text-sm font-bold bg-teal-50 px-4 py-2 rounded-full mt-2 transition-colors border border-teal-100"
                 >
@@ -465,9 +500,9 @@ function App() {
             ) : (
               <div className="grid grid-cols-1 gap-5 pb-10">
                 {savedSessions.map(session => (
-                  <SessionCard 
-                    key={session.id} 
-                    session={session} 
+                  <SessionCard
+                    key={session.id}
+                    session={session}
                     onRestore={handleRestore}
                     onDelete={handleDeleteSession}
                     labels={{
@@ -486,10 +521,10 @@ function App() {
       {/* Footer / Copyright */}
       <footer className="bg-white/80 backdrop-blur-md border-t border-gray-100 p-4 text-center z-20 shadow-[0_-1px_2px_rgba(0,0,0,0.02)]">
         <p className="text-xs text-gray-500 font-bold mix-blend-multiply">
-           &copy; 2025 ChanryTabStash • {t.copyright}
+          &copy; {new Date().getFullYear()} ChanryTabStash • {t.copyright}
         </p>
         <p className="text-[11px] text-gray-400 mt-1 font-bold">
-           {t.systemId}
+          <a href="https://chanrytw.github.io/" target="_blank" rel="noreferrer" className="hover:text-teal-500 transition-colors">{t.systemId}</a>
         </p>
       </footer>
     </div>

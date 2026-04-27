@@ -33,4 +33,4 @@ export interface AIGroupingResponse {
 
 export type TabSelection = Set<number>;
 
-export type Language = 'en' | 'zh' | 'ja';
+export type Language = 'en' | 'zh' | 'ja' | 'es' | 'de' | 'fr' | 'ko' | 'pt' | 'ru';
